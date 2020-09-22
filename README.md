@@ -1,6 +1,6 @@
 # Sample Flask App
 
-This is a sample Flask App that's intended to be easily configured and extended, with a dynamic data model in ![yaml format](./models.yaml).
+This is a sample Flask App that's intended to be easily configured and extended, with a dynamic data model in [yaml format](./models.yaml).
 
 The [model file](./models.yaml) is a list of tables and it's corresponding columns, defined with data types, data size and and additional `doc` attribute, which can configured with a Faker algorithm in the format of `<algorithm name>-<locale>`. Please check the Faker [documentation](https://faker.readthedocs.io/en/master/locales.html) for additional details about supported algorithms and locales.
 
