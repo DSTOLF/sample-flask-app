@@ -24,7 +24,7 @@ python3 migrations_custom.py
 
 Or run a fully automated migration with [fake data](./migrations_faker.py) based on what you defined in `models.yaml`
 ```
-python3 migrations_custom.py
+python3 migrations_faker.py
 ```
 
 Once you have the data generated, just run the app and visit the the Flask Admin web app on `http://127.0.0.1:5000/admin/` to easily view, edit and create data: 
