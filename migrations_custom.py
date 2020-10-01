@@ -116,7 +116,7 @@ COMPANIES_LIST = [
 
 with app.app_context():
     # Reload tables
-    db.drop_all()
+    # db.drop_all()
     db.create_all()
     for i in range(len(COMPANIES_LIST)):
         company = Models[0](**COMPANIES_LIST[i])

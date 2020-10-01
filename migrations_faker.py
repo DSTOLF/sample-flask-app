@@ -64,9 +64,9 @@ def add_model_instance(model_class, amount=10, parent=None):
 
 with app.app_context():
     # Reload tables
-    db.drop_all()
+    # db.drop_all()
     db.create_all()
-    
+
 for model_class in Models:
     if model_class.__name__ in processed:
         continue

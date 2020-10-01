@@ -13,7 +13,7 @@ COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -r requirements.txt
 
 # copy project
-COPY . /usr/src/app/
+COPY ./*.py /usr/src/app/
 
 ENTRYPOINT ["python"]
 CMD ["app.py"] 
