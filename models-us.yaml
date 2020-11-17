@@ -1,0 +1,93 @@
+Company:
+  table_name: 'company'
+  plural: False
+  columns:
+    id:
+      data_type: 'Integer'
+      sequence: 'company_seq'
+      primary_key: True
+    company_name:
+      data_type: 'String'
+      data_size: 80
+      unique: False
+      identity: True
+      doc: 'company-en_US'
+    ein:
+      data_type: 'String'
+      data_size: 15
+      doc: 'ein-en_US'
+      unique: True
+    street_address:
+      data_type: 'String'
+      data_size: 80
+      doc: 'street_address-en_US'
+    state:
+      data_type: 'String'
+      data_size: 2
+      doc: 'state_abbr-en_US'
+    city:
+      data_type: 'String'
+      data_size: 50
+      doc: 'city-en_US'
+    zipcode:
+      data_type: 'String'
+      data_size: 10
+      doc: 'zipcode-en_US'
+  relationships:
+    employees:
+      related_class: 'Employee'
+      back_populates:  'company'
+      lazy: 'dynamic'
+      type: 'child'
+
+Employee:
+  table_name: 'employee'
+  plural: 'employees'
+  columns:
+    id:
+      data_type: 'Integer'
+      sequence: 'employee_seq'
+      primary_key: True
+    first_name:
+      data_type: 'String'
+      data_size: 80
+      doc: 'first_name-en_US'    
+    last_name:
+      data_type: 'String'
+      data_size: 80
+      doc: 'last_name-en_US'
+    street_address:
+      data_type: 'String'
+      data_size: 80
+      doc: 'street_address-en_US'
+    state:
+      data_type: 'String'
+      data_size: 2
+      doc: 'state_abbr-en_US'
+    city:
+      data_type: 'String'
+      data_size: 50
+      doc: 'city-en_US'
+    zipcode:
+      data_type: 'String'
+      data_size: 10
+      doc: 'zipcode-en_US'
+    ssn:
+      data_type: 'String'
+      data_size: 20
+      unique: True
+      nullable: False
+      doc: 'ssn-en_US'
+    company_ein:
+      data_type: 'String'
+      data_size: 15
+      doc: 'ein-en_US'
+      foreign_key: 'company.ein'
+      index: True
+      nullable: False
+      unique: False
+  relationships:
+    company:
+      related_class: 'Company'
+      back_populates: 'employees'
+      type: parent

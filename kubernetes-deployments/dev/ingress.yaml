@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User, X-Auth-Request-Email
+    nginx.ingress.kubernetes.io/auth-signin: https://auth.k8s.delphixdemo.com/oauth2/start?rd=%2F$server_name$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://auth.k8s.delphixdemo.com/oauth2/auth
+  labels:
+    name: flask-app
+  name: flask-app
+spec:
+  rules:
+  - host: flask-app.dev.k8s.delphixdemo.com
+    http:
+      paths:
+      - backend:
+          serviceName: flask-app
+          servicePort: 5000
+        path: /
+  tls:
+  - hosts:
+    - flask-app.dev.k8s.delphixdemo.com
+    secretName: flask-app-tls
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  labels:
+    name: flask-app-tls
+  name: flask-app-tls
+spec:
+  dnsNames:
+  - flask-app.dev.k8s.delphixdemo.com
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  secretName: flask-app-tls

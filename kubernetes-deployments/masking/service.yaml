@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: flask-app
+  name: flask-app
+spec:
+  ports:
+  - name: flask-app
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    name: flask-app
+  sessionAffinity: None
+  type: ClusterIP

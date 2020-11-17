@@ -1,0 +1,24 @@
+FROM python:3.8.1-slim-buster
+
+# set work directory
+WORKDIR /usr/src/app
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt /usr/src/app/requirements.txt
+RUN pip install -r requirements.txt
+RUN pip install cx_oracle
+
+# copy project
+COPY ./*.py /usr/src/app/
+
+RUN mv config_oracle.py config.py
+RUN apt update && apt install wget gzip unzip libaio1 -y
+RUN wget -q -O tmp.zip https://download.oracle.com/otn_software/linux/instantclient/199000/instantclient-basiclite-linux.x64-19.9.0.0.0dbru.zip && unzip -j -d ./lib tmp.zip && rm -f tmp.zip
+ENV LD_LIBRARY_PATH=/usr/src/app/lib
+ENTRYPOINT ["python"]
+CMD ["app.py"] 

@@ -36,6 +36,7 @@ for class_name,class_def in model_list.items():
     for column_name, column_attrs in model.columns.items():
         class_attrs[column_name]=db.Column(getattr(db, column_attrs['data_type'])(column_attrs['data_size']) if 'data_size' in column_attrs  else getattr(db, column_attrs['data_type']),
                                             db.ForeignKey(column_attrs['foreign_key'])if 'foreign_key' in column_attrs  else None,
+                                            db.Sequence(column_attrs['sequence'])if 'sequence' in column_attrs  else None,
                                             primary_key=column_attrs['primary_key'] if 'primary_key' in column_attrs else False,
                                             unique = column_attrs['unique'] if 'unique' in column_attrs  else False,
                                             index = column_attrs['index'] if 'index' in column_attrs  else False,

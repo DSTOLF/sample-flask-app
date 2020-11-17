@@ -1,0 +1,7 @@
+DATABASE_HOST=oracle-source.k8s.demo.local
+DATABASE_PORT=1521
+DATABASE_USER=delphix_db
+DATABASE_PASSWORD=delphix
+DATABASE_NAME=orclpdb1
+API_PREFIX=/api
+

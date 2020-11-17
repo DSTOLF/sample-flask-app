@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  minReadySeconds: 30
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: flask-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: dcstolf/sample-python-app:v2.0-oracle
+        imagePullPolicy: Always
+        env:
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: flask-app-config
+              key: DATABASE_HOST
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: flask-app-config
+              key: DATABASE_NAME
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: flask-app-config
+              key: DATABASE_PORT
+        - name: app_environment
+          valueFrom:
+            configMapKeyRef:
+              name: flask-app-config
+              key: app_environment
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: database-creds
+              key: username
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-creds
+              key: password
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 5000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        volumeMounts:
+        - name: database-model-volume
+          mountPath: /usr/src/app/models.yaml
+          subPath: models.yaml
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 5000
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: "200Mi"
+          requests:
+            cpu: 100m
+            memory: "100Mi"
+      volumes:
+      - name: database-model-volume
+        configMap: 
+          name: database-model
+          items:
+          - key: models.yaml
+            path: models.yaml
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 60

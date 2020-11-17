@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  DATABASE_HOST: oracle-source.k8s.demo.local
+  DATABASE_NAME: orclpdb1
+  DATABASE_PORT: "1521"
+  app_environment: Production
+kind: ConfigMap
+metadata:
+  name: flask-app-config

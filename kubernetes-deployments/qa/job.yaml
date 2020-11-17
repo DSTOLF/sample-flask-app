@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-migration
+spec:
+  template:
+    spec:
+      containers:
+      - name: flask-app-migration
+        image: dcstolf/sample-python-app:v2.0-oracle
+        args: ["migrations_custom.py"]
+        env:
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: flask-app-config
+              key: DATABASE_HOST
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: flask-app-config
+              key: DATABASE_NAME
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: flask-app-config
+              key: DATABASE_PORT
+        - name: app_environment
+          valueFrom:
+            configMapKeyRef:
+              name: flask-app-config
+              key: app_environment
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: database-creds
+              key: username
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-creds
+              key: password
+        volumeMounts:
+        - name: database-model-volume
+          mountPath: /usr/src/app/models.yaml
+          subPath: models.yaml
+      volumes:
+      - name: database-model-volume
+        configMap: 
+          name: database-model
+          items:
+          - key: models.yaml
+            path: models.yaml
+      restartPolicy: Never
+  backoffLimit: 4
